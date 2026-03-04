@@ -8,6 +8,47 @@ prototype/
 └── (其他静态资源)
 ```
 
+## 前置准备：API Token 配置
+
+在服务器/CI 环境中部署（无法交互式登录）时，需要提前配置 API Token。
+
+### 创建 API Token
+
+1. 访问 https://dash.cloudflare.com/profile/api-tokens
+2. 点击 **Create Token** → **Custom Token**
+3. 配置以下权限：
+
+| 权限 | 资源范围 | 说明 |
+|------|---------|------|
+| `Cloudflare Pages:Edit` | Account | 创建/更新 Pages 项目（必须） |
+| `Account Settings:Read` | Account | 读取账户信息（必须） |
+| `Zone:Read` | All Zones | 自定义域名时需要 |
+| `DNS:Edit` | 指定 Zone | 配置 DNS 绑定域名时需要 |
+
+4. 创建后复制 Token（只显示一次）
+
+### 获取 Account ID
+
+在 Cloudflare Dashboard 右侧边栏可以看到 **Account ID**，复制备用。
+
+### 配置环境变量
+
+```bash
+export CLOUDFLARE_API_TOKEN="your-api-token"
+export CLOUDFLARE_ACCOUNT_ID="your-account-id"
+```
+
+或写入 `.env` 文件（注意不要提交到 Git）：
+
+```
+CLOUDFLARE_API_TOKEN=your-api-token
+CLOUDFLARE_ACCOUNT_ID=your-account-id
+```
+
+配置好后，`wrangler` 会自动读取这两个环境变量，无需交互式登录。
+
+---
+
 ## 部署方式
 
 ### 方式1：Wrangler CLI（推荐）
@@ -16,8 +57,11 @@ prototype/
 # 安装 Wrangler
 npm install -g wrangler
 
-# 登录 Cloudflare
+# 本地开发：交互式登录（浏览器授权）
 wrangler login
+
+# 服务器/CI：使用 API Token（见上方前置准备）
+# 确保已设置 CLOUDFLARE_API_TOKEN 和 CLOUDFLARE_ACCOUNT_ID
 
 # 部署到 Cloudflare Pages
 cd prototype
