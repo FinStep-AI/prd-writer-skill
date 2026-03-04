@@ -71,6 +71,42 @@ python3 scripts/ui-ux-pro-max/search.py "fintech" --domain color
 python3 scripts/ui-ux-pro-max/search.py "modern elegant" --domain typography
 ```
 
+## 部署到 Cloudflare Pages
+
+原型生成后可一键部署到 Cloudflare Pages（国内可访问、免费、自动 HTTPS）。
+
+### 1. 创建 API Token
+
+访问 https://dash.cloudflare.com/profile/api-tokens → **Create Token** → **Custom Token**，配置以下权限：
+
+| 权限 | 资源范围 | 是否必须 |
+|------|---------|---------|
+| `Cloudflare Pages:Edit` | Account | ✅ 必须 |
+| `Account Settings:Read` | Account | ✅ 必须 |
+| `Zone:Read` | All Zones | 自定义域名时需要 |
+| `DNS:Edit` | 指定 Zone | 绑定域名时需要 |
+
+同时在 Dashboard 右侧边栏复制你的 **Account ID**。
+
+### 2. 配置环境变量
+
+```bash
+export CLOUDFLARE_API_TOKEN="your-api-token"
+export CLOUDFLARE_ACCOUNT_ID="your-account-id"
+```
+
+### 3. 部署
+
+```bash
+npm install -g wrangler
+cd prototype
+wrangler pages deploy . --project-name=your-project-name
+```
+
+部署成功后获得访问地址：`https://your-project.pages.dev`
+
+> 详细说明见 [references/cloudflare-deploy.md](references/cloudflare-deploy.md)
+
 ## License
 
 MIT
